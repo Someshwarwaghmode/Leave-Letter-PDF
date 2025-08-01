@@ -1,4 +1,3 @@
-// api/generate-leave-letter.js
 
 import { createWriteStream, readFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
@@ -28,7 +27,7 @@ export default async function handler(req, res) {
       contactNumber,
     } = req.body;
 
-    const filePath = join('/tmp', 'leave_letter.pdf'); // ✅ Writable path on Vercel
+    const filePath = join('/tmp', 'leave_letter.pdf'); 
 
     const doc = new PDFDocument({ margin: 50 });
     const writeStream = createWriteStream(filePath);
@@ -69,7 +68,6 @@ export default async function handler(req, res) {
 
     doc.end();
 
-    // ✅ Wait for stream to finish before reading
     await streamFinished(writeStream);
 
     const fileBuffer = readFileSync(filePath);
@@ -78,7 +76,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/pdf');
     res.send(fileBuffer);
 
-    unlinkSync(filePath); // 🧹 Clean temp file
+    unlinkSync(filePath); 
   } catch (err) {
     console.error('PDF generation failed:', err);
     res.status(500).send({ message: 'Failed to generate PDF' });

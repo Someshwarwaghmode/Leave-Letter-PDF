@@ -1,6 +1,5 @@
 import LeaveForm from "./LeaveForm"
 
-
 function App() {
   return (
     <div>

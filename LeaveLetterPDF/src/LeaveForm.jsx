@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './LeaveForm.css';
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
 
 const LeaveForm = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const LeaveForm = () => {
     'B.Tech IT',
     'B.Tech ME',
     'B.Tech Civil',
-    'B.Tech AI-ML'
+    'B.Tech AI-ML',
   ];
 
   const placeholders = {
@@ -42,7 +43,6 @@ const LeaveForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Auto-fill returnDate when leaveEnd changes
     if (name === 'leaveEnd') {
       setFormData({ ...formData, leaveEnd: value, returnDate: value });
     } else {
@@ -57,7 +57,7 @@ const LeaveForm = () => {
         '/api/generate-leave-letter',
         formData,
         { responseType: 'blob' }
-        );
+      );
 
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
@@ -73,53 +73,74 @@ const LeaveForm = () => {
     }
   };
 
-  return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <div className="scroll-wrapper">
-          {Object.keys(formData).map((field) => (
-            <div key={field} className="form-group">
-              <label>
-                {field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              </label>
+  const formItems = Object.keys(formData).map((field) => (
+    <div key={field} className="px-4 py-6">
+      <div className="flex flex-col gap-2 bg-white p-4 rounded-lg shadow-md">
+        <label className="text-gray-700 font-semibold">
+          {field.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+        </label>
 
-              {/* Course dropdown */}
-              {field === 'course' ? (
-                <select
-                  name="course"
-                  value={formData.course}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select your course</option>
-                  {courseOptions.map((course) => (
-                    <option key={course} value={course}>{course}</option>
-                  ))}
-                </select>
-              ) :
-              /* Date pickers */
-              field === 'leaveStart' || field === 'leaveEnd' ? (
-                <input
-                  type="date"
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  required
-                />
-              ) : (
-                <input
-                  type="text"
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  placeholder={placeholders[field]}
-                  required
-                  readOnly={field === 'returnDate'} // Make returnDate read-only
-                />
-              )}
-            </div>
-          ))}
-          <button type="submit">Get Leave Letter</button>
+        {/* Course dropdown */}
+        {field === 'course' ? (
+          <select
+            name="course"
+            value={formData.course}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          >
+            <option value="">Select your course</option>
+            {courseOptions.map((course) => (
+              <option key={course} value={course}>{course}</option>
+            ))}
+          </select>
+        ) : field === 'leaveStart' || field === 'leaveEnd' ? (
+          <input
+            type="date"
+            name={field}
+            value={formData[field]}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+        ) : (
+          <input
+            type={field === 'contactNumber' ? 'tel' : 'text'}
+            name={field}
+            value={formData[field]}
+            onChange={handleChange}
+            placeholder={placeholders[field]}
+            className="border p-2 rounded"
+            required
+            readOnly={field === 'returnDate'}
+          />
+        )}
+      </div>
+    </div>
+  ));
+
+  return (
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <AliceCarousel
+          mouseTracking
+          items={formItems}
+          disableDotsControls={false}
+          disableButtonsControls={false}
+          responsive={{
+            0: { items: 1 },
+            768: { items: 2 },
+            1024: { items: 3 },
+          }}
+        />
+
+        <div className="text-center">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 transition"
+          >
+            Get Leave Letter
+          </button>
         </div>
       </form>
     </div>
