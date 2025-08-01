@@ -1,0 +1,97 @@
+/* LeaveForm.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Disable page scrolling */
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f8;
+}
+
+form {
+  width: 90%;
+  max-width: 800px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  overflow: auto;
+  max-height: 90vh;
+}
+
+.scroll-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button[type="submit"] {
+  grid-column: span 2;
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .scroll-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+/* ...existing styles... */
+
+.form-group select,
+.form-group input[type="date"] {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.3s ease;
+  width: 100%;
+}
+
+.form-group select:focus,
+.form-group input[type="date"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
