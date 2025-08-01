@@ -1,0 +1,15 @@
+{
+ "version": 2,
+ "builds": [
+ {
+ "src": "generate-leave-letter.js",
+ "use": "@vercel/node"
+ }
+ ],
+ "routes": [
+ {
+ "src": "/api/(.*)",
+ "dest": "generate-leave-letter.js"
+ }
+ ]
+}
