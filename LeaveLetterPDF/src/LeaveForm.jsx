@@ -1,14 +1,12 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
 
 const LeaveForm = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     course: '',
     roomNumber: '',
-    hostelAddress: '',
+    hostelName: '',
     leaveStart: '',
     leaveEnd: '',
     reason: '',
@@ -18,22 +16,27 @@ const LeaveForm = () => {
     contactNumber: '',
   });
 
-  const fieldKeys = Object.keys(formData);
   const inputRefs = useRef([]);
 
   const courseOptions = [
-    'B.Tech CSE',
-    'B.Tech ECE',
-    'B.Tech IT',
-    'B.Tech ME',
-    'B.Tech Civil',
-    'B.Tech AI-ML',
+    "BE/Computer Engineering",
+    "BE/Artificial Intelligence & Data Science",
+    "BE/Mechanical Engineering",
+    "BE/Civil Engineering",
+    "BE/Electronics & Telecommunication Engineering",
+    "BE/Information Technology",
+    "MBA/Marketing Management",
+    "MBA/Financial Management",
+    "MBA/Human Resource Management",
+    "MBA/International Business",
+    "MBA/Operations & Supply Chain Management",
+    "MCA/Master of Computer Applications"
   ];
 
   const placeholders = {
     fullName: 'Enter your full name',
     roomNumber: 'Enter your hostel room number',
-    hostelAddress: 'Enter your hostel Name',
+    hostelName: 'Enter your hostel Name',
     leaveStart: 'Select leave start date',
     leaveEnd: 'Select leave end date',
     reason: 'Reason for leave',
@@ -43,22 +46,16 @@ const LeaveForm = () => {
     contactNumber: 'Enter your contact number',
   };
 
-  const handleChange = (e, index) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'leaveEnd') {
-      setFormData({ ...formData, leaveEnd: value, returnDate: value });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-
-    if (
-      value.length >= 4 &&
-      index < inputRefs.current.length - 1 &&
-      name !== 'returnDate'
-    ) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    setFormData((prevData) => {
+      const updatedData = { ...prevData, [name]: value };
+      if (name === 'leaveEnd') {
+        updatedData.returnDate = value;
+      }
+      return updatedData;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -84,73 +81,13 @@ const LeaveForm = () => {
     }
   };
 
-  const groupedFields = [];
-  for (let i = 0; i < fieldKeys.length; i += 3) {
-    groupedFields.push(fieldKeys.slice(i, i + 3));
-  }
-
-  const formItems = groupedFields.map((group, groupIndex) => (
-    <div key={groupIndex} className="px-4 py-6">
-      <div className="flex flex-col gap-6">
-        {group.map((field, index) => {
-          const inputIndex = groupIndex * 3 + index;
-          return (
-            <div key={field} className="flex flex-col">
-              <label className="text-sm font-medium text-gray-600">
-                {field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              </label>
-
-              {field === 'course' ? (
-                <select
-                  name="course"
-                  value={formData.course}
-                  onChange={(e) => handleChange(e, inputIndex)}
-                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
-                  ref={(el) => (inputRefs.current[inputIndex] = el)}
-                  required
-                >
-                  <option value="">Select your course</option>
-                  {courseOptions.map((course) => (
-                    <option key={course} value={course}>{course}</option>
-                  ))}
-                </select>
-              ) : field === 'leaveStart' || field === 'leaveEnd' ? (
-                <input
-                  type="date"
-                  name={field}
-                  value={formData[field]}
-                  onChange={(e) => handleChange(e, inputIndex)}
-                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
-                  ref={(el) => (inputRefs.current[inputIndex] = el)}
-                  required
-                />
-              ) : (
-                <input
-                  type={field === 'contactNumber' ? 'tel' : 'text'}
-                  name={field}
-                  value={formData[field]}
-                  onChange={(e) => handleChange(e, inputIndex)}
-                  placeholder={placeholders[field]}
-                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
-                  ref={(el) => (inputRefs.current[inputIndex] = el)}
-                  required
-                  readOnly={field === 'returnDate'}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  ));
-
   return (
     <>
       {/* Scrolling Marquee at Top */}
       <div className="w-full bg-black text-white py-2">
         <div className="overflow-hidden whitespace-nowrap">
           <div className="animate-marquee text-center text-lg font-bold">
-            Chanakay(Indira) Hostel Parandwaid & All Student like MCA , BE , MBA, Can Get the Leave Form from this side
+            Chanakay(Indira) Hostel Parandwaid & All Student like MCA , BE , MBA, Can Get the Leave Form from this site
           </div>
         </div>
       </div>
@@ -169,28 +106,71 @@ const LeaveForm = () => {
         `}
       </style>
 
-      {/* Existing Form */}
+      {/* Form */}
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-teal-400 p-4">
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl w-full max-w-md p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center text-blue-600">Hostel Leave Form</h2>
-
-          <AliceCarousel
-            mouseTracking
-            items={formItems}
-            disableDotsControls={false}
-            disableButtonsControls={false}
-            responsive={{
-              0: { items: 1 },
-              768: { items: 1 },
-              1024: { items: 1 },
-            }}
-          />
-
-          <div className="flex items-center space-x-2">
-            <input type="checkbox" className="w-4 h-4" required />
-            <label className="text-sm text-gray-700">Conform </label>
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl w-full max-w-md p-8 space-y-6 overflow-y-auto max-h-[90vh] relative pt-0">
+          
+          {/* Fixed Title */}
+          <div className='sticky top-0 z-10 bg-white p-6'>
+            <div className="sticky top-0 z-10 bg-white pb-2">
+              <h2 className="text-2xl font-bold text-center text-blue-600">Hostel Leave Form</h2>
+            </div>
           </div>
 
+          {/* Form Fields */}
+          {Object.keys(formData).map((field, index) => (
+            <div key={field} className="flex flex-col">
+              <label className="text-sm font-medium text-gray-600 mb-1">
+                {field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+              </label>
+
+              {field === 'course' ? (
+                <select
+                  name="course"
+                  value={formData.course}
+                  onChange={handleChange}
+                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  required
+                >
+                  <option value="">Select your course</option>
+                  {courseOptions.map((course) => (
+                    <option key={course} value={course}>{course}</option>
+                  ))}
+                </select>
+              ) : field === 'leaveStart' || field === 'leaveEnd' ? (
+                <input
+                  type="date"
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  required
+                />
+              ) : (
+                <input
+                  type={field === 'contactNumber' ? 'tel' : 'text'}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  placeholder={placeholders[field]}
+                  className="border-b-2 border-teal-400 focus:outline-none focus:border-blue-500 p-2 bg-transparent"
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  required
+                  readOnly={field === 'returnDate'}
+                />
+              )}
+            </div>
+          ))}
+
+          {/* Confirm Checkbox */}
+          <div className="flex items-center space-x-2">
+            <input type="checkbox" className="w-4 h-4" required />
+            <label className="text-sm text-gray-700">Confirm</label>
+          </div>
+
+          {/* Submit Button */}
           <div className="text-center">
             <button
               type="submit"
