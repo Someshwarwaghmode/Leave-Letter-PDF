@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       fullName,
       course,
       roomNumber,
-      hostelAddress,
+      hostelName,
       leaveStart,
       leaveEnd,
       reason,
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       year: 'numeric',
     });
 
-    doc.text(`To\nThe Warden,\n${hostelAddress}\n`, { lineGap: 5 });
+    doc.text(`To\nThe Warden,\n${hostelName}\n`, { lineGap: 5 });
     doc.moveDown();
     doc.text(`Date: ${today}`, { lineGap: 5 });
     doc.moveDown();
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     doc.text(`Respected Sir/Madam,`, { lineGap: 6 });
     doc.moveDown();
     doc.text(
-      `I am ${fullName}, a student of ${course}, residing in Room No. ${roomNumber} at ${hostelAddress}. I would like to request leave from the hostel from ${leaveStart} to ${leaveEnd} due to ${reason}.`,
+      `I am ${fullName}, a student of ${course}, residing in Room No. ${roomNumber} at ${hostelName}. I would like to request leave from the hostel from ${leaveStart} to ${leaveEnd} due to ${reason}.`,
       { lineGap: 6, align: 'justify' }
     );
     doc.moveDown();
